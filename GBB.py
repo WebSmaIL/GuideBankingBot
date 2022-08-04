@@ -18,7 +18,7 @@ async def on_start(_):
 
 @dp.message_handler(commands=['start', 'help'])
 async def command_start(message : types.Message):
-    if message.text in messageDict:
+    if message.text in messageDict.keys():
         await message.answer(messageDict[message.text])
     
 """ ************************* Админская часть бота ************************** """
