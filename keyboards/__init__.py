@@ -1,1 +1,2 @@
-from keyboards.client_keyboard import client_keyboard
+from keyboards.start_client_keyboard import client_keyboard
+from keyboards.inline_info_client_keyboard import inline_client_keyboard_info
