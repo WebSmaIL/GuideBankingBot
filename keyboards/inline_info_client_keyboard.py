@@ -7,8 +7,11 @@ info_inline_btn_1 = InlineKeyboardButton(
 info_inline_btn_2 = InlineKeyboardButton(
     'Перечень знаний, умений, навыков', callback_data='listOfKnowledge'
     )
+info_inline_btn_3 = InlineKeyboardButton(
+    'Обобщенная оценочная ведомость', callback_data='SumEvalState'
+    )
 
-inline_client_keyboard_info = InlineKeyboardMarkup().add(info_inline_btn_1).add(info_inline_btn_2)
+inline_client_keyboard_info = InlineKeyboardMarkup().add(info_inline_btn_1).add(info_inline_btn_2).add(info_inline_btn_3)
 
 # Клавиатура разделов
 chapter_inline_btn_1 = InlineKeyboardButton(

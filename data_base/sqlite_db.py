@@ -3,7 +3,7 @@ import sqlite3
 
 def sql_start():
     global base, cur 
-    base = sqlite3.connect('pizza_cool.db')
+    base = sqlite3.connect('database.db')
     cur = base.cursor()
     if base:
         print('Data base connected')

@@ -6,7 +6,7 @@ from keyboards import client_keyboard, inline_client_keyboard_info, inline_clien
 
 kb_dict = {
     'info' : inline_client_keyboard_info,
-    'chapter' : inline_client_keyboard_chapter
+    'chapter' : inline_client_keyboard_chapter,
 }
 
 async def command_start(message : types.Message):
