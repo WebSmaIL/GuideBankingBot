@@ -10,8 +10,11 @@ info_inline_btn_2 = InlineKeyboardButton(
 info_inline_btn_3 = InlineKeyboardButton(
     'Обобщенная оценочная ведомость', callback_data='SumEvalState'
     )
+info_inline_btn_4 = InlineKeyboardButton(
+    'Модули с описанием работ', callback_data='modules'
+    )
 
-inline_client_keyboard_info = InlineKeyboardMarkup().add(info_inline_btn_1).add(info_inline_btn_2).add(info_inline_btn_3)
+inline_client_keyboard_info = InlineKeyboardMarkup().add(info_inline_btn_1).add(info_inline_btn_2).add(info_inline_btn_3).add(info_inline_btn_4)
 
 # Клавиатура разделов
 chapter_inline_btn_1 = InlineKeyboardButton(
