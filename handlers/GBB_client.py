@@ -73,11 +73,14 @@ async def test_1_answer_3(message: types.Message, state: FSMContext):
     counter = 0
     strr=""
     for i in range(len(currentTest["answers"])):
-        strr+=f"Вопрос {str(i+1)} \nВаш ответ: {data[f'answer_{str(i)}']}\nПравильный ответ: {currentTest['answers'][i]}\n\n"
+        strr+=f"""<b>Вопрос {str(i+1)}</b>
+        Ваш ответ: <i>{data[f'answer_{str(i)}']}</i>
+        Правильный ответ: <i>{currentTest['answers'][i]}</i>\n\n"""
+                
         if currentTest['answers'][i] == data[f'answer_{str(i)}']:
             counter+=1
-    strr+=f"Всего правильных ответов {str(counter)} из {str(len(currentTest['answers']))}"
-    await message.answer(strr)
+    strr+=f"Всего правильных ответов <i>{str(counter)}</i> из <i>{str(len(currentTest['answers']))}</i>"
+    await message.answer(strr, parse_mode=types.ParseMode.HTML)
     
     await state.finish()
 
