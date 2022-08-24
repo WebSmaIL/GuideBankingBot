@@ -1,10 +1,13 @@
+import imp
 import json
+from typing import Text
 from aiogram import types, Dispatcher
 from create_bot import commandsDict, messagesDict, dp, bot, dataDict
-from keyboards import client_keyboard, inline_client_keyboard_info, inline_client_keyboard_chapter, tests_client_keyboard
+from keyboards import keyboard_for_test, client_keyboard, inline_client_keyboard_info, inline_client_keyboard_chapter, tests_client_keyboard
 # from data_base.sqlite_db import sql_read
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters import Text
 
 kb_dict = {
     'info' : inline_client_keyboard_info,
@@ -27,8 +30,10 @@ async def messages_handler(message: types.Message):
         with open('./json/testsDict.json', 'r', encoding="utf-8") as data:
             global currentTest
             currentTest = json.load(data)[message.text]
-        await message.answer(currentTest["question_1"]) 
+        await message.answer(currentTest["question_1"], reply_markup=keyboard_for_test) 
         await test_1.question_1.set()
+    if message.text == "Назад":
+        await message.answer("Вы вышли из выбора тестов", reply_markup=client_keyboard)
     if message.text in messagesDict.keys():
         await message.reply(messagesDict[message.text][1],
                             reply_markup=kb_dict[messagesDict[message.text][0]],
@@ -96,6 +101,14 @@ async def test_1_answer_3(message: types.Message, state: FSMContext):
     await message.answer(strr, parse_mode=types.ParseMode.HTML)
     
     await state.finish()
+    
+# dp.message_handler(Text(equals='Выйти', ignore_case=True), state="*")
+async def cancel_FSM(message: types.Message, state:FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+    await state.finish()
+    await message.answer("Вы вышли из теста", reply_markup=client_keyboard)
 
 
 def client_handlers_register(dp : Dispatcher):
@@ -103,13 +116,13 @@ def client_handlers_register(dp : Dispatcher):
         command_start, 
         commands=['start', 'help']
     )
-    # dp.register_message_handler(
-    #     test_1_start,
-    #     state=None
-    # )
-    dp.register_message_handler(messages_handler)
+    
+    dp.register_message_handler(cancel_FSM, commands="cancel", state="*")
+    dp.register_message_handler(cancel_FSM, Text(equals="выйти", ignore_case=True), state="*")
     dp.register_message_handler(test_1_answer_1, state=test_1.question_1)
     dp.register_message_handler(test_1_answer_2, state=test_1.question_2)
     dp.register_message_handler(test_1_answer_3, state=test_1.question_3)
+
+    dp.register_message_handler(messages_handler)
     dp.register_callback_query_handler(process_callback, text=dataDict.keys())
     
