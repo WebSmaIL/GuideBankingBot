@@ -1,10 +1,8 @@
-import imp
 import json
 from typing import Text
 from aiogram import types, Dispatcher
 from create_bot import commandsDict, messagesDict, dp, bot, dataDict
 from keyboards import keyboard_for_test, client_keyboard, inline_client_keyboard_info, inline_client_keyboard_chapter, tests_client_keyboard
-# from data_base.sqlite_db import sql_read
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
@@ -23,7 +21,7 @@ with open('./json/testsDict.json', 'r', encoding="utf-8") as data:
 
 async def command_start(message : types.Message):
     if message.text in commandsDict.keys():
-        await message.answer(message.from_user.full_name + ", " + commandsDict[message.text], reply_markup=client_keyboard)
+        await message.answer(commandsDict[message.text], reply_markup=client_keyboard)
 
 async def messages_handler(message: types.Message):
     if message.text in testsArr:
@@ -58,19 +56,14 @@ async def process_callback(callback_query: types.CallbackQuery):
 
 """ STATE CLASS FOR TESTS """
 class test_1(StatesGroup):
-    test_is_start = State()
     question_1 = State()
     question_2 = State()
     question_3 = State()
+    question_4 = State()
+    question_5 = State()
         
 """ FUNCTIONS FOR TESTS """
-# @dp.message_handler(commands=['starttest'])
-# async def test_1_start(message: types.Message):
-#     with open('./json/testsDict.json', 'r', encoding="utf-8") as data:
-#         global currentTest
-#         currentTest = json.load(data)[message.text]
-#         await message.answer(currentTest["question_1"])
-#         await test_1.question_1.set()
+
 
 # @dp.message_handler(state=test_1.question_1)
 async def test_1_answer_1(message: types.Message, state: FSMContext):
@@ -83,10 +76,20 @@ async def test_1_answer_2(message: types.Message, state: FSMContext):
     await state.update_data(answer_1=message.text)
     await message.answer(currentTest["question_3"])
     await test_1.next()
-
-# @dp.message_handler(state=test_1.question_3)
+    
 async def test_1_answer_3(message: types.Message, state: FSMContext):
     await state.update_data(answer_2=message.text)
+    await message.answer(currentTest["question_4"])
+    await test_1.next()
+
+async def test_1_answer_4(message: types.Message, state: FSMContext):
+    await state.update_data(answer_3=message.text)
+    await message.answer(currentTest["question_5"])
+    await test_1.next()
+
+# @dp.message_handler(state=test_1.question_3)
+async def test_1_answer_5(message: types.Message, state: FSMContext):
+    await state.update_data(answer_4=message.text)
     data = await state.get_data()
     counter = 0
     strr=""
@@ -98,7 +101,7 @@ async def test_1_answer_3(message: types.Message, state: FSMContext):
         if currentTest['answers'][i] == data[f'answer_{str(i)}']:
             counter+=1
     strr+=f"Всего правильных ответов <i>{str(counter)}</i> из <i>{str(len(currentTest['answers']))}</i>"
-    await message.answer(strr, parse_mode=types.ParseMode.HTML)
+    await message.answer(strr, parse_mode=types.ParseMode.HTML, reply_markup=client_keyboard)
     
     await state.finish()
     
@@ -122,6 +125,8 @@ def client_handlers_register(dp : Dispatcher):
     dp.register_message_handler(test_1_answer_1, state=test_1.question_1)
     dp.register_message_handler(test_1_answer_2, state=test_1.question_2)
     dp.register_message_handler(test_1_answer_3, state=test_1.question_3)
+    dp.register_message_handler(test_1_answer_4, state=test_1.question_4)
+    dp.register_message_handler(test_1_answer_5, state=test_1.question_5)
 
     dp.register_message_handler(messages_handler)
     dp.register_callback_query_handler(process_callback, text=dataDict.keys())
